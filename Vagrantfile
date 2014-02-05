@@ -38,9 +38,11 @@ $defaults_boxes = {
 
 $boxes = {
     :trusty => {
-        :box => "trusty",
-        :box_url => "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box"
     },
+    :centos_64 => {
+        :box => "centos_64",
+        :box_url => "http://puppet-vagrant-boxes.puppetlabs.com/centos-64-x64-vbox4210-nocm.box"
+    }
 }
 
 $defaults_vms = {
@@ -58,14 +60,25 @@ $defaults_vms = {
 $vms = { 
   "vbox" => [
     {
-        :name => "test.vbox",
+        :name => "trusty.vbox",
         :is_primary => true,
         :ip_num => 2,
         :port_forwards => [
           { :guest => 80, :host => 18080 }
         ]
     },
-  ]
+  ], 
+  [
+    {
+        :name => "centos_64.vbox",
+        :box => $boxes[:centos_64]
+        :is_primary => false,
+        :ip_num => 2,
+        :port_forwards => [
+          { :guest => 80, :host => 18080 }
+        ]
+    },
+  ]  
 }
 
 logger.info("Setting up environment")
