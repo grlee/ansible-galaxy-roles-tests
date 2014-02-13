@@ -1,4 +1,7 @@
 ---
-- hosts: all
+- include: vagrant.yml
+
+- hosts: test_boxes
   roles:
-  - { role: ansible-init }
+  - { role: grlee.ansible-init }
+

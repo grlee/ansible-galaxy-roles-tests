@@ -1,1 +1,7 @@
+[vagrant]
 localhost ansible_connection=local
+
+[test_boxes]
+precise.vbox ansible_ssh_port=20022
+trusty.vbox ansible_ssh_port=30022
+centos-64.vbox ansible_ssh_port=40022

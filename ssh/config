@@ -1,0 +1,18 @@
+Host *
+  HostName 127.0.0.1
+  User vagrant
+  IdentityFile ssh/vagrant_insecure_private_key
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentitiesOnly yes
+  LogLevel FATAL
+
+Host precise.vbox
+  Port 20022
+
+Host trusty.vbox
+  Port 30022
+
+Host centos-64.vbox
+  Port 40022

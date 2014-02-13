@@ -1,0 +1,30 @@
+---
+- name: Check if vagrant_is installed
+  command: /bin/false creates=/usr/bin/vagrant
+  ignore_errors: yes
+  register: vagrant_installed
+
+- name: Get vagrant_version
+  command: /usr/bin/vagrant --version
+  register: vagrant_version_console
+  when: vagrant_installed|success or vagrant_installed|skipped
+
+- name: Set vagrant_version fact
+  set_fact: "vagrant_version={{vagrant_version_console.stdout}}"
+  when: vagrant_installed|success or vagrant_installed|skipped
+
+- name: Check that vagrant_is at least at version 1.4
+  version_check: minimum=1.4 version={{vagrant_version}}
+  ignore_errors: yes
+  register: vagrant_installed
+  when: vagrant_installed|success or vagrant_installed|skipped
+
+- name: Install plugins needed
+  command: /usr/bin/vagrant plugin install {{item}}
+  with_items: vagrant_plugins
+  when: vagrant_installed|success
+
+#- name: Create vboxes
+#  command : /usr/bin/vagrant pristine --force --parallel
+#  with_items: vagrant_plugins
+#  when: vagrant_installed|success  
