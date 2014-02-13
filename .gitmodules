@@ -1,0 +1,3 @@
+[submodule "roles/grlee.ansible-init"]
+	path = roles/grlee.ansible-init
+	url = git@github.com:grlee/ansible-init.git

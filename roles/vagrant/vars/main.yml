@@ -1,0 +1,12 @@
+---
+vagrant_plugins:
+- vagrant-cachier
+- vagrant-hosts
+- vagrant-pristine
+#- vagrant-vbguest
+#- vagrant-box-updater
+
+vagrant_boxes:
+- precise.vbox
+- trusty.vbox
+- centos_64.vbox
