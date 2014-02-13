@@ -6,6 +6,8 @@ require 'vagrant'
 
 VAGRANTFILE_API_VERSION = "2"
 
+ip_prefix="95"
+
 logger = Logger.new(STDOUT)
 logger.level = Logger::INFO
 
@@ -37,7 +39,13 @@ $defaults_boxes = {
 }
 
 $boxes = {
+    :precise => {
+        :box => "precise",
+        :box_url => "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-i386-vagrant-disk1.box"
+    },
     :trusty => {
+        :box => "trusty",
+        :box_url => "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-i386-vagrant-disk1.box"
     },
     :centos_64 => {
         :box => "centos_64",
@@ -54,29 +62,36 @@ $defaults_vms = {
         {:local => ".", :remote => "/vagrant/", owner: "vagrant", group: "vagrant", mount_options: ["dmode=700", "fmode=600"]},
         {:local => Dir.home + "/.ssh", :remote => "/ssh_user", owner: "vagrant", group: "vagrant", mount_options: ["dmode=700", "fmode=600"]},
     ],
-    :playbook => "site.yml"
+#    :playbook => "site.yml"
 }
 
 $vms = { 
   "vbox" => [
     {
-        :name => "trusty.vbox",
+        :name => "precise.vbox",
         :is_primary => true,
         :ip_num => 2,
         :port_forwards => [
-          { :guest => 80, :host => 18080 }
-        ]
+          { :guest => 22, :host => 20022 }
+        ]        
     },
-  ], 
-  [
     {
-        :name => "centos_64.vbox",
-        :box => $boxes[:centos_64]
-        :is_primary => false,
-        :ip_num => 2,
+        :name => "trusty.vbox",
+        :box => $boxes[:trusty],
+        :is_primary => true,
+        :ip_num => 3,
         :port_forwards => [
-          { :guest => 80, :host => 18080 }
-        ]
+          { :guest => 22, :host => 30022 }
+        ]        
+    },
+    {
+        :name => "centos-64.vbox",
+        :box => $boxes[:centos_64],
+        :is_primary => true,
+        :ip_num => 4,
+        :port_forwards => [
+          { :guest => 22, :host => 40022 }
+        ]        
     },
   ]  
 }
@@ -113,7 +128,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       logger.debug("box: #{box}")
 
       if env == "vbox"
-        ip="192.168.53."+ip_num.to_s
+        ip="192.168."+ip_prefix+"."+ip_num.to_s
         logger.info("HOSTS >>> " + ip + " " + hostname)
         logger.debug("Setting network to #{ip}")
       end
@@ -140,7 +155,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
           config.vm.network "public_network", :bridge => 'eth0'
         end 
                  
-        config.vm.provision :hosts
+#        config.vm.provision :hosts
         config.cache.auto_detect = true
 
         logger.debug("Setting up virtual box")

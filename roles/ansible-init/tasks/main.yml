@@ -1,4 +1,0 @@
----
-- name: Test ansible is installed
-  shell: ansible --version
-
